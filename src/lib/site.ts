@@ -2,7 +2,7 @@ export const site = {
     name: "MSU CS Club",
     longName: "Minot State University Computer Science Club",
     meeting: {
-        day: "Wednesdays",
+        day: "Tuesdays",
         time: "3:00 PM",
         place: "Model 113",
     },
