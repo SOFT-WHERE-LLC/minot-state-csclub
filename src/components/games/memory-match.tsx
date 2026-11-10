@@ -103,6 +103,38 @@ const MemoryMatch = () => {
         </div>
     )
 
+    const webGameContent = (
+        <div className="mx-auto max-w-xl px-4 py-10">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+                <p className="font-mono text-sm text-zinc-600">
+                    Moves: <span className="font-semibold text-zinc-900">{moves}</span> · Pairs:{" "}
+                    <span className="font-semibold text-zinc-900">{matchedPairs}/6</span>
+                </p>
+                <button onClick={shuffleCards} className="btn-secondary px-4 py-2">
+                    New game
+                </button>
+            </div>
+            <div className="mt-6 grid grid-cols-4 gap-3">
+                {cards.map((card) => (
+                    <button
+                        key={card.id}
+                        onClick={() => handleCardClick(card.id)}
+                        disabled={card.flipped || card.matched}
+                        className={`flex aspect-square items-center justify-center rounded-xl text-4xl font-bold transition ${
+                            card.matched
+                                ? "bg-emerald-50 ring-1 ring-inset ring-emerald-200"
+                                : card.flipped
+                                  ? "bg-white ring-2 ring-inset ring-brand-500"
+                                  : "bg-zinc-900 text-zinc-500 hover:bg-zinc-800"
+                        }`}
+                    >
+                        {card.flipped || card.matched ? card.content : "?"}
+                    </button>
+                ))}
+            </div>
+        </div>
+    )
+
     return (
         <NoSSR>
             {isNativeApp() ? (
@@ -115,9 +147,7 @@ const MemoryMatch = () => {
                     <IonContent className="ion-padding">{gameContent}</IonContent>
                 </IonPage>
             ) : (
-                <div className="min-h-screen bg-gray-100 py-8">
-                    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md">{gameContent}</div>
-                </div>
+                webGameContent
             )}
         </NoSSR>
     )

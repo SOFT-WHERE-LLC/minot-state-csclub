@@ -4,6 +4,7 @@ import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/rea
 import { isNativeApp } from "@/lib/utils"
 import NoSSR from "@/components/NoSSR"
 import GamesList from "@/components/GamesList"
+import PageHeader from "@/components/PageHeader"
 
 export default function Games() {
     const content = (
@@ -40,7 +41,16 @@ export default function Games() {
                     <IonContent fullscreen>{content}</IonContent>
                 </IonPage>
             ) : (
-                <main className="flex-1">{content}</main>
+                <main className="flex-1">
+                    <PageHeader
+                        eyebrow="Play"
+                        title="Games"
+                        description="A collection of browser games built by CS Club members. Pick one and play right here."
+                    />
+                    <div className="page-shell">
+                        <GamesList />
+                    </div>
+                </main>
             )}
         </NoSSR>
     )

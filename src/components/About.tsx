@@ -12,65 +12,63 @@ import {
 } from "@ionic/react"
 import { isNativeApp } from "@/lib/utils"
 import NoSSR from "@/components/NoSSR"
+import PageHeader from "@/components/PageHeader"
+import { site } from "@/lib/site"
 
 export default function About() {
     const WebContent = () => (
-        <div className="container mx-auto px-4 py-12">
-            <div className="max-w-4xl mx-auto">
-                <h1 className="text-4xl font-bold text-gray-900 mb-8">About Us</h1>
+        <main className="flex-1">
+            <PageHeader
+                eyebrow="About"
+                title="About the CS Club"
+                description="The CS Club at Minot State University is dedicated to fostering a community of learners interested in computer science and technology."
+            />
+            <div className="page-shell">
+                <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+                    <section className="surface p-6 sm:p-8">
+                        <h2 className="section-title">What we do</h2>
+                        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+                            {[
+                                "Organize workshops and coding sessions to enhance programming skills",
+                                "Host guest speakers from the tech industry",
+                                "Participate in programming competitions and hackathons",
+                                "Provide networking opportunities with industry professionals",
+                            ].map((item) => (
+                                <li key={item} className="flex items-start gap-3 rounded-xl bg-zinc-50 p-4 ring-1 ring-inset ring-zinc-200">
+                                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-600" />
+                                    <span className="text-sm text-zinc-700">{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
 
-                <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-4">Our Mission</h2>
-                    <p className="text-lg text-gray-600 mb-8">
-                        The CS Club at Minot State University is dedicated to fostering a community of learners interested in
-                        computer science and technology.
-                    </p>
-
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">What We Do</h3>
-                    <ul className="space-y-4 text-gray-600">
-                        <li className="flex items-start">
-                            <span className="text-red-600 mr-2">•</span>
-                            <span>Organize workshops and coding sessions to enhance programming skills</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-red-600 mr-2">•</span>
-                            <span>Host guest speakers from the tech industry</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-red-600 mr-2">•</span>
-                            <span>Participate in programming competitions and hackathons</span>
-                        </li>
-                        <li className="flex items-start">
-                            <span className="text-red-600 mr-2">•</span>
-                            <span>Provide networking opportunities with industry professionals</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-8">
-                    <div className="bg-white rounded-xl shadow-lg p-8">
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Join Us</h2>
-                        <p className="text-gray-600">
-                            We welcome students of all skill levels who are passionate about technology and want to learn more about
-                            computer science. Meetings are held weekly during the academic year.
-                        </p>
-                    </div>
-
-                    <div className="bg-white rounded-xl shadow-lg p-8">
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Contact</h2>
-                        <p className="text-gray-600">
-                            Have questions? Reach out to us at{" "}
-                            <a href="mailto:csclub@minotstateu.edu" className="text-red-600 hover:text-red-700 underline">
-                                csclub@minotstateu.edu
-                            </a>
-                        </p>
+                    <div className="space-y-6">
+                        <section className="surface p-6 sm:p-8">
+                            <h2 className="text-lg font-semibold text-zinc-900">Join us</h2>
+                            <p className="mt-3 text-sm leading-relaxed text-zinc-600">
+                                We welcome students of all skill levels who are passionate about technology and want to learn more about
+                                computer science. Meetings are held weekly during the academic year.
+                            </p>
+                            <p className="mt-4 font-mono text-xs text-zinc-500">
+                                {site.meeting.day} · {site.meeting.time} · {site.meeting.place}
+                            </p>
+                        </section>
+                        <section className="surface p-6 sm:p-8">
+                            <h2 className="text-lg font-semibold text-zinc-900">Contact</h2>
+                            <p className="mt-3 text-sm text-zinc-600">
+                                Have questions? Reach out to us at{" "}
+                                <a href={`mailto:${site.email}`} className="link">
+                                    {site.email}
+                                </a>
+                            </p>
+                        </section>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     )
 
-    const NativeContent = () => (
+const NativeContent = () => (
         <IonPage>
             <IonContent fullscreen>
                 <div className="max-w-4xl mx-auto px-4">

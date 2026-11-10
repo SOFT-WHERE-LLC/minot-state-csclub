@@ -16,9 +16,11 @@ import {
     IonButton,
     IonIcon,
 } from "@ionic/react"
-import { mailOutline, logoGithub, logoDiscord } from "ionicons/icons"
+import { mailOutline, logoGithub, logoDiscord, logoInstagram } from "ionicons/icons"
 import { isNativeApp } from "@/lib/utils"
 import NoSSR from "@/components/NoSSR"
+import PageHeader from "@/components/PageHeader"
+import { site } from "@/lib/site"
 
 export default function Contact() {
     const [name, setName] = useState("")
@@ -36,95 +38,52 @@ export default function Contact() {
     */}
 
     const WebContact = () => (
-        <div className="container mx-auto px-4 py-12">
-            <div className="flex flex-col w-full justify-center max-w-4xl mx-auto">
-                <h1 className="text-4xl font-bold text-gray-900 mb-8">Contact Us</h1>
-
-                <div className="grid md:grid-cols-2 gap-8">
-                    <div className="bg-white rounded-xl shadow-lg p-8">
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Get in Touch</h2>
-                        <p className="text-gray-600 mb-6">
-                            Have questions about the CS Club or want to get involved? We'd love to hear from you!
-                        </p>
-                        <div className="space-y-4">
-                            <a href="mailto:csclub@minotstateu.edu" className="flex items-center text-red-600 hover:text-red-700">
-                                <IonIcon icon={mailOutline} className="w-5 h-5 mr-2" />
-                                csclub@minotstateu.edu
-                            </a>
-                            <a
-                                href="https://github.com/MSUCSClub"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center text-gray-600 hover:text-gray-700"
-                            >
-                                <IonIcon icon={logoGithub} className="w-5 h-5 mr-2" />
-                                GitHub
-                            </a>
-                            <a href="https://discord.gg/WEdBaCeYsa" className="flex items-center text-gray-600 hover:text-gray-700">
-                                <IonIcon icon={logoDiscord} className="w-5 h-5 mr-2" />
-                                Discord
-                            </a>
-                        </div>
-                    </div>
-
-                    {/*
-                    <div className="bg-white rounded-xl shadow-lg p-8">
-                        <h2 className="text-2xl font-semibold text-gray-900 mb-4">Send us a Message</h2>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                                    Message
-                                </label>
-                                <textarea
-                                    id="message"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    rows={4}
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
-                                    required
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition duration-200"
-                            >
-                                Send Message
-                            </button>
-                        </form>
-                    </div>
-                    */}
+        <main className="flex-1">
+            <PageHeader
+                eyebrow="Contact"
+                title="Get in touch"
+                description="Have questions about the CS Club or want to get involved? We'd love to hear from you."
+            />
+            <div className="page-shell">
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    {[
+                        { icon: mailOutline, label: "Email", value: site.email, href: `mailto:${site.email}`, external: false },
+                        { icon: logoDiscord, label: "Discord", value: "Join the server", href: site.links.discord, external: true },
+                        { icon: logoGithub, label: "GitHub", value: "github.com/MSUCSClub", href: site.links.github, external: true },
+                        { icon: logoInstagram, label: "Instagram", value: "@msu_csclub", href: site.links.instagram, external: true },
+                    ].map((item) => (
+                        <a
+                            key={item.label}
+                            href={item.href}
+                            {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                            className="surface surface-hover group flex flex-col p-6"
+                        >
+                            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-600 ring-1 ring-inset ring-brand-100">
+                                <IonIcon icon={item.icon} className="h-5 w-5" />
+                            </span>
+                            <h2 className="mt-5 font-semibold text-zinc-900">{item.label}</h2>
+                            <p className="mt-1 break-words text-sm text-zinc-600 transition group-hover:text-brand-600">{item.value}</p>
+                        </a>
+                    ))}
                 </div>
+
+                <section className="surface mt-6 flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+                    <div>
+                        <h2 className="text-lg font-semibold text-zinc-900">Or just come to a meeting</h2>
+                        <p className="mt-1 text-sm text-zinc-600">
+                            {site.meeting.day} at {site.meeting.time} in {site.meeting.place}. Everyone&apos;s welcome.
+                        </p>
+                    </div>
+                    <a href={site.links.discord} target="_blank" rel="noopener noreferrer" className="btn-primary shrink-0">
+                        <IonIcon icon={logoDiscord} className="h-4 w-4" />
+                        Join our Discord
+                    </a>
+                </section>
             </div>
-        </div>
+        </main>
     )
 
-    const NativeContact = () => (
+const NativeContact = () => (
         <IonPage>
             <IonHeader>
                 <IonToolbar>

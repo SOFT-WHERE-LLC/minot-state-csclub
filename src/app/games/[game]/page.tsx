@@ -5,6 +5,9 @@ import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle } from "@ionic/rea
 import { isNativeApp } from "@/lib/utils"
 import NoSSR from "@/components/NoSSR"
 import dynamic from "next/dynamic"
+import Link from "next/link"
+import { IonIcon } from "@ionic/react"
+import { arrowBackOutline } from "ionicons/icons"
 
 export default function GamePage() {
     const params = useParams()
@@ -15,10 +18,22 @@ export default function GamePage() {
         ssr: false,
     })
 
+    const title = gameId
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+
     const content = (
-        <div className="max-w-6xl mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-8">Playing: {gameId}</h1>
-            <GameComponent />
+        <div className="mx-auto w-full max-w-4xl px-5 py-10 sm:py-14">
+            <Link href="/games" className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-brand-600">
+                <IonIcon icon={arrowBackOutline} className="h-4 w-4" />
+                All games
+            </Link>
+            <p className="eyebrow mt-6">Now playing</p>
+            <h1 className="mt-2 text-3xl font-semibold text-zinc-900 sm:text-4xl">{title}</h1>
+            <div className="surface mt-8 overflow-hidden">
+                <GameComponent />
+            </div>
         </div>
     )
 
@@ -28,7 +43,7 @@ export default function GamePage() {
                 <IonPage>
                     <IonHeader>
                         <IonToolbar>
-                            <IonTitle>{gameId}</IonTitle>
+                            <IonTitle>{title}</IonTitle>
                         </IonToolbar>
                     </IonHeader>
                     <IonContent fullscreen>{content}</IonContent>

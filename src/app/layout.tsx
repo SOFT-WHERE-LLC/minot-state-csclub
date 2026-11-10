@@ -1,8 +1,8 @@
 import type { Metadata } from "next"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
-
-import "@/styling/globals.css"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css"
@@ -18,6 +18,9 @@ import "@ionic/react/css/text-alignment.css"
 import "@ionic/react/css/text-transformation.css"
 import "@ionic/react/css/flex-utils.css"
 import "@ionic/react/css/display.css"
+
+/* Site styles load last so they win over Ionic's base styles */
+import "@/styling/globals.css"
 
 export const metadata: Metadata = {
   title: "MSU CS Club | Minot State University",
@@ -60,8 +63,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning className="min-h-screen flex flex-col bg-background text-foreground">
+    <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body suppressHydrationWarning className="flex min-h-screen flex-col bg-zinc-50 font-sans text-zinc-900">
         <Navbar />
         {children}
         <Footer />

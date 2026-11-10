@@ -201,6 +201,60 @@ const Minesweeper = () => {
         </div>
     )
 
+    const webCellClass = (cell: Cell): string => {
+        if (!cell.isRevealed) {
+            return cell.isFlagged
+                ? "bg-amber-100 ring-1 ring-inset ring-amber-300"
+                : "bg-zinc-300 hover:bg-zinc-400 shadow-[inset_0_-2px_0_rgb(0_0_0/0.15)]"
+        }
+        if (cell.isMine) return "bg-brand-600 text-white"
+        return "bg-zinc-50 ring-1 ring-inset ring-zinc-200"
+    }
+
+    const numberColors = ["", "text-blue-600", "text-emerald-600", "text-brand-600", "text-indigo-700", "text-amber-700", "text-teal-600", "text-zinc-900", "text-zinc-500"]
+
+    const webGameContent = (
+        <div className="mx-auto max-w-lg px-4 py-10">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="font-mono text-sm text-zinc-600">
+                    {gameOver ? "Boom. Game over!" : gameWon ? "You cleared the field!" : `${MINES_COUNT} mines hidden`}
+                </p>
+                <div className="flex gap-2">
+                    <button
+                        onClick={() => setFlagMode(!flagMode)}
+                        className={flagMode ? "btn bg-amber-100 px-4 py-2 text-amber-900 ring-1 ring-inset ring-amber-300" : "btn-secondary px-4 py-2"}
+                    >
+                        {flagMode ? "🚩 Flag mode" : "⛏️ Dig mode"}
+                    </button>
+                    <button onClick={resetGame} className="btn-primary px-4 py-2">
+                        New game
+                    </button>
+                </div>
+            </div>
+            <div className="mt-6 grid gap-1 rounded-xl bg-zinc-200 p-1.5" style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(0, 1fr))` }}>
+                {board.map((row, y) =>
+                    row.map((cell, x) => (
+                        <button
+                            key={`${y}-${x}`}
+                            onClick={() => handleCellClick(y, x)}
+                            onContextMenu={(e) => {
+                                e.preventDefault()
+                                toggleFlag(y, x)
+                            }}
+                            disabled={gameOver || gameWon}
+                            className={`flex aspect-square items-center justify-center rounded-md text-sm font-bold transition sm:text-base ${webCellClass(cell)} ${
+                                cell.isRevealed && !cell.isMine ? numberColors[cell.neighborMines] : ""
+                            }`}
+                        >
+                            {getCellContent(cell)}
+                        </button>
+                    )),
+                )}
+            </div>
+            <p className="mt-4 text-center text-xs text-zinc-500">Tip: right-click a square to flag it.</p>
+        </div>
+    )
+
     return (
         <NoSSR>
             {isNativeApp() ? (
@@ -213,9 +267,7 @@ const Minesweeper = () => {
                     <IonContent className="ion-padding">{gameContent}</IonContent>
                 </IonPage>
             ) : (
-                <div className="min-h-screen bg-gray-100 py-8">
-                    <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md">{gameContent}</div>
-                </div>
+                webGameContent
             )}
         </NoSSR>
     )

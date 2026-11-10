@@ -4,72 +4,139 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --background: 240 5% 98%;
+    --foreground: 240 10% 4%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card-foreground: 240 10% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover-foreground: 240 10% 4%;
 
-    --primary: 0 72.2% 50.6%;
-    --primary-foreground: 0 85.7% 97.3%;
+    /* MSU red (#c8102e) */
+    --primary: 350 85% 42%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 240 6% 10%;
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 240 5% 96%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 240 5% 96%;
+    --accent-foreground: 240 6% 10%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 72.2% 50.6%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 350 85% 42%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Ionic: use the site fonts and MSU red instead of Ionic's default blue */
+    --ion-font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+    --ion-color-primary: #c8102e;
+    --ion-color-primary-rgb: 200, 16, 46;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #b00e28;
+    --ion-color-primary-tint: #ce2843;
   }
 
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
+  html {
+    scroll-behavior: smooth;
+  }
 
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
+  body {
+    @apply bg-zinc-50 font-sans text-zinc-900 antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
 
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
+  ::selection {
+    @apply bg-brand-600 text-white;
+  }
 
-    --primary: 0 72.2% 50.6%;
-    --primary-foreground: 0 85.7% 97.3%;
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply tracking-tight;
+  }
 
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
+  /* Ionic's normalize strips border-style from form controls; restore it so Tailwind border utilities work */
+  button,
+  input,
+  select,
+  textarea {
+    border-style: solid;
+  }
+}
 
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+@layer components {
+  /* Page content wrapper used by every inner page */
+  .page-shell {
+    @apply mx-auto w-full max-w-6xl px-5 py-12 sm:py-16;
+  }
 
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
+  .eyebrow {
+    @apply font-mono text-xs font-medium uppercase tracking-[0.18em] text-brand-600;
+  }
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+  .surface {
+    @apply rounded-2xl border border-zinc-200/80 bg-white shadow-card;
+  }
 
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 72.2% 50.6%;
+  .surface-hover {
+    @apply transition duration-200 hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lift;
+  }
+
+  .section-title {
+    @apply text-2xl font-semibold text-zinc-900 sm:text-3xl;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border-solid px-5 py-2.5 text-sm font-semibold transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-600 text-white shadow-sm hover:bg-brand-700;
+  }
+
+  .btn-secondary {
+    @apply btn border border-zinc-200 bg-white text-zinc-900 hover:border-zinc-300 hover:bg-zinc-50;
+  }
+
+  .btn-ghost-dark {
+    @apply btn border border-white/15 bg-white/5 text-white hover:border-white/30 hover:bg-white/10;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-zinc-700;
+  }
+
+  .field {
+    @apply block w-full rounded-lg border border-solid border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 shadow-sm transition placeholder:text-zinc-400 focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700 ring-1 ring-inset ring-brand-100;
+  }
+
+  .link {
+    @apply font-medium text-brand-600 underline-offset-4 transition hover:text-brand-700 hover:underline;
+  }
+
+  .code-block {
+    @apply overflow-x-auto rounded-xl border border-zinc-800 bg-zinc-950 px-4 py-3 font-mono text-sm text-zinc-100;
   }
 }
 
 /* Ionic specific overrides */
 ion-card {
   margin: 0 !important;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  box-shadow: 0 1px 2px rgb(24 24 27 / 0.04), 0 4px 16px -4px rgb(24 24 27 / 0.08) !important;
   border-radius: var(--radius) !important;
 }
 
@@ -79,6 +146,13 @@ ion-card-header {
 
 ion-card-content {
   padding: 0.75rem 1.5rem 1.5rem 1.5rem !important;
+}
+
+ion-button {
+  --border-radius: 0.5rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
 }
 
 .ion-page {

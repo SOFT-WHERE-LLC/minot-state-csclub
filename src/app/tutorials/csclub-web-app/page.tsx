@@ -3,128 +3,139 @@
 import { IonContent, IonPage, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonLabel } from "@ionic/react"
 import { isNativeApp } from "@/lib/utils"
 import NoSSR from "@/components/NoSSR"
+import Link from "next/link"
+import { IonIcon } from "@ionic/react"
+import { arrowBackOutline } from "ionicons/icons"
+import PageHeader from "@/components/PageHeader"
+import { site } from "@/lib/site"
 
 export default function CSClubAppTutorial() {
-    const WebTutorial = () => (
-        <div className="p-8">
-            <h2 className="text-4xl font-bold mb-4">CS Club App Setup Guide</h2>
-            <p className="mb-4">
-                This tutorial will guide you through the steps to clone the CS Club web app and get it running on your local
-                machine.
-            </p>
+    const WebTutorial = () => {
+        const steps = [
+            {
+                title: "Prerequisites",
+                body: (
+                    <ul className="space-y-2">
+                        <li>
+                            Install{" "}
+                            <a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer" className="link">
+                                Visual Studio Code
+                            </a>{" "}
+                            for code editing.
+                        </li>
+                        <li>
+                            Install{" "}
+                            <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" className="link">
+                                Node.js
+                            </a>{" "}
+                            (LTS version recommended).
+                        </li>
+                        <li>
+                            Optionally, install{" "}
+                            <a href="https://git-scm.com/downloads" target="_blank" rel="noopener noreferrer" className="link">
+                                Git
+                            </a>{" "}
+                            if it&apos;s not already installed.
+                        </li>
+                    </ul>
+                ),
+            },
+            {
+                title: "Clone the repository",
+                body: <p>Open a terminal or command prompt and run the following command to clone the CS Club web app repository:</p>,
+                code: "git clone https://github.com/MSUCSClub/csclub-web-app.git",
+            },
+            {
+                title: "Navigate to the project directory",
+                body: <p>Change into the project directory using the following command:</p>,
+                code: "cd csclub-web-app",
+            },
+            {
+                title: "Install dependencies",
+                body: <p>Run the following command to install the necessary packages:</p>,
+                code: "npm install",
+            },
+            {
+                title: "Run the development server",
+                body: (
+                    <p>
+                        Start the development server, then open{" "}
+                        <a href="http://localhost:3000" target="_blank" rel="noopener noreferrer" className="link">
+                            http://localhost:3000
+                        </a>{" "}
+                        in your browser to see the application running.
+                    </p>
+                ),
+                code: "npm run dev",
+            },
+            {
+                title: "Next.js resources",
+                body: (
+                    <ul className="space-y-2">
+                        <li>
+                            <a href="https://nextjs.org/docs" target="_blank" rel="noopener noreferrer" className="link">
+                                Official Next.js Documentation
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://nextjs.org/learn" target="_blank" rel="noopener noreferrer" className="link">
+                                Next.js Learning Path
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://react.dev/learn" target="_blank" rel="noopener noreferrer" className="link">
+                                React Documentation
+                            </a>
+                        </li>
+                    </ul>
+                ),
+            },
+        ]
 
-            <h3 className="text-2xl font-semibold mb-2">1. Prerequisites</h3>
-            <ul className="list-disc ml-6 mb-4">
-                <li>
-                    Install{" "}
-                    <a
-                        href="https://code.visualstudio.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                    >
-                        Visual Studio Code
-                    </a>{" "}
-                    for code editing.
-                </li>
-                <li>
-                    Install{" "}
-                    <a
-                        href="https://nodejs.org/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                    >
-                        Node.js
-                    </a>{" "}
-                    (LTS version recommended).
-                </li>
-                <li>
-                    Optionally, install{" "}
-                    <a
-                        href="https://git-scm.com/downloads"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                    >
-                        Git
-                    </a>{" "}
-                    if it's not already installed.
-                </li>
-            </ul>
+        return (
+            <main className="flex-1">
+                <PageHeader
+                    eyebrow="Tutorial · Web development"
+                    title="CS Club App Setup Guide"
+                    description="Clone the CS Club web app and get it running on your own machine in a few minutes."
+                />
+                <div className="mx-auto w-full max-w-3xl px-5 py-12 sm:py-16">
+                    <Link href="/tutorials" className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-brand-600">
+                        <IonIcon icon={arrowBackOutline} className="h-4 w-4" />
+                        All tutorials
+                    </Link>
+                    <ol className="mt-8 space-y-6">
+                        {steps.map((step, index) => (
+                            <li key={step.title} className="surface p-6 sm:p-8">
+                                <div className="flex items-center gap-3">
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-600 font-mono text-sm font-semibold text-white">
+                                        {index + 1}
+                                    </span>
+                                    <h2 className="text-lg font-semibold text-zinc-900">{step.title}</h2>
+                                </div>
+                                <div className="mt-4 text-[15px] leading-relaxed text-zinc-700">{step.body}</div>
+                                {step.code && (
+                                    <pre className="code-block mt-4">
+                                        <span className="select-none text-brand-400">$ </span>
+                                        {step.code}
+                                    </pre>
+                                )}
+                            </li>
+                        ))}
+                    </ol>
+                    <p className="mt-8 rounded-xl bg-zinc-100 px-5 py-4 text-sm text-zinc-600">
+                        Stuck? Check the repository&apos;s README, or ask in the{" "}
+                        <a href={site.links.discord} target="_blank" rel="noopener noreferrer" className="link">
+                            club Discord
+                        </a>
+                        .
+                    </p>
+                </div>
+            </main>
+        )
+    }
 
-            <h3 className="text-2xl font-semibold mb-2">2. Clone the Repository</h3>
-            <p className="mb-4">
-                Open a terminal or command prompt and run the following command to clone the CS Club web app repository:
-            </p>
-            <pre className="bg-gray-100 p-4 rounded mb-4">git clone https://github.com/MSUCSClub/csclub-web-app.git</pre>
-
-            <h3 className="text-2xl font-semibold mb-2">3. Navigate to the Project Directory</h3>
-            <p className="mb-4">Change into the project directory using the following command:</p>
-            <pre className="bg-gray-100 p-4 rounded mb-4">cd csclub-web-app</pre>
-
-            <h3 className="text-2xl font-semibold mb-2">4. Install Dependencies</h3>
-            <p className="mb-4">Run the following command to install the necessary packages:</p>
-            <pre className="bg-gray-100 p-4 rounded mb-4">npm install</pre>
-
-            <h3 className="text-2xl font-semibold mb-2">5. Run the Development Server</h3>
-            <p className="mb-4">Start the development server using the following command:</p>
-            <pre className="bg-gray-100 p-4 rounded mb-4">npm run dev</pre>
-            <p className="mb-4">
-                Open your browser and visit{" "}
-                <a
-                    href="http://localhost:3000"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
-                >
-                    http://localhost:3000
-                </a>{" "}
-                to see the application running.
-            </p>
-
-            <h3 className="text-2xl font-semibold mb-2">6. Next.js Resources</h3>
-            <ul className="list-disc ml-6 mb-4">
-                <li>
-                    <a
-                        href="https://nextjs.org/docs"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                    >
-                        Official Next.js Documentation
-                    </a>
-                </li>
-                <li>
-                    <a
-                        href="https://nextjs.org/learn"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                    >
-                        Next.js Learning Path
-                    </a>
-                </li>
-                <li>
-                    <a
-                        href="https://react.dev/learn"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                    >
-                        React Documentation
-                    </a>
-                </li>
-            </ul>
-
-            <p>
-                If you encounter any issues, please refer to the repository's README file or reach out to the CS Club for
-                support.
-            </p>
-        </div>
-    )
-
-    const NativeTutorial = () => (
+const NativeTutorial = () => (
         <IonPage>
             <IonHeader>
                 <IonToolbar>

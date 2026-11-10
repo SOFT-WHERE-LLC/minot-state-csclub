@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { IonContent, IonPage, IonItem, IonLabel, IonInput, IonButton, IonText, IonList } from "@ionic/react"
 import { isNativeApp } from "@/lib/utils"
 import NoSSR from "@/components/NoSSR"
@@ -55,7 +56,7 @@ export default function Register() {
 
             if (response.ok) {
                 setSuccess(true)
-                setTimeout(() => router.push("/login"), 2000)
+                setTimeout(() => router.push("/signin"), 2000)
             } else {
                 const data = await response.json()
                 setError(data.message || "Failed to register. Please try again.")
@@ -66,81 +67,120 @@ export default function Register() {
     }
 
     const WebRegister = () => (
-        <div className="max-w-md mx-auto p-8 bg-white shadow-lg rounded-lg mt-10">
-            <h2 className="text-4xl font-bold text-center text-red-600">Register</h2>
-            <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                    <input
-                        type="text"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                        placeholder="Your full name"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">School Email</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                        placeholder="Enter your email"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                        placeholder="Create a password"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Year of Study</label>
-                    <input
-                        type="text"
-                        value={yearOfStudy}
-                        onChange={(e) => setYearOfStudy(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                        placeholder="e.g., Freshman, Sophomore"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Major</label>
-                    <input
-                        type="text"
-                        value={major}
-                        onChange={(e) => setMajor(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                        placeholder="Your major (e.g., Computer Science)"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Profile Picture (Optional)</label>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleProfilePicChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none"
-                    />
-                </div>
-                {error && <p className="text-red-500 text-center">{error}</p>}
-                {success && <p className="text-green-500 text-center">Registration successful! Redirecting...</p>}
-                <button type="submit" className="w-full p-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                    Register
-                </button>
-            </form>
-        </div>
+        <main className="relative isolate flex flex-1 items-center justify-center overflow-hidden bg-zinc-950 px-5 py-16">
+            <div className="absolute inset-0 -z-10 bg-grid bg-grid [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" />
+            <div className="absolute left-1/2 top-1/4 -z-10 h-80 w-80 -translate-x-1/2 rounded-full bg-brand-600/25 blur-3xl" />
+            <div className="w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl ring-1 ring-black/5 sm:p-10">
+                <p className="eyebrow">Members</p>
+                <h1 className="mt-2 text-3xl font-semibold text-zinc-900">Create your account</h1>
+                <p className="mt-2 text-sm text-zinc-600">Join the club roster with your school email.</p>
+                <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+                    <div>
+                        <label htmlFor="fullName" className="field-label">
+                            Full name
+                        </label>
+                        <input
+                            id="fullName"
+                            type="text"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            className="field"
+                            placeholder="Your full name"
+                            autoComplete="name"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="email" className="field-label">
+                            School email
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="field"
+                            placeholder="you@ndus.edu"
+                            autoComplete="email"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password" className="field-label">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="field"
+                            placeholder="Create a password"
+                            autoComplete="new-password"
+                            required
+                        />
+                    </div>
+                    <div className="grid gap-5 sm:grid-cols-2">
+                        <div>
+                            <label htmlFor="yearOfStudy" className="field-label">
+                                Year of study
+                            </label>
+                            <input
+                                id="yearOfStudy"
+                                type="text"
+                                value={yearOfStudy}
+                                onChange={(e) => setYearOfStudy(e.target.value)}
+                                className="field"
+                                placeholder="e.g. Sophomore"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="major" className="field-label">
+                                Major
+                            </label>
+                            <input
+                                id="major"
+                                type="text"
+                                value={major}
+                                onChange={(e) => setMajor(e.target.value)}
+                                className="field"
+                                placeholder="e.g. Computer Science"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label htmlFor="profilePic" className="field-label">
+                            Profile picture <span className="font-normal text-zinc-400">(optional)</span>
+                        </label>
+                        <input
+                            id="profilePic"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleProfilePicChange}
+                            className="block w-full text-sm text-zinc-600 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100"
+                        />
+                    </div>
+                    {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-inset ring-red-200">{error}</p>}
+                    {success && (
+                        <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700 ring-1 ring-inset ring-emerald-200">
+                            Registration successful! Redirecting...
+                        </p>
+                    )}
+                    <button type="submit" className="btn-primary w-full py-3">
+                        Create account
+                    </button>
+                    <p className="text-center text-sm text-zinc-600">
+                        Already a member?{" "}
+                        <Link href="/signin" className="link">
+                            Sign in
+                        </Link>
+                    </p>
+                </form>
+            </div>
+        </main>
     )
 
-    const NativeRegister = () => (
+const NativeRegister = () => (
         <IonPage>
             <IonContent className="ion-padding">
                 <h2 className="text-4xl font-bold text-center text-red-600 mb-6">Register</h2>
@@ -219,5 +259,5 @@ export default function Register() {
         </IonPage>
     )
 
-    return <NoSSR>{isNativeApp() ? <NativeRegister /> : <WebRegister />}</NoSSR>
+    return <NoSSR>{isNativeApp() ? NativeRegister() : WebRegister()}</NoSSR>
 }

@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonGrid, IonRow, IonCol } from "@ionic/react"
+import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonGrid, IonRow, IonCol, IonIcon } from "@ionic/react"
+import { playOutline } from "ionicons/icons"
 import { isNativeApp } from "@/lib/utils"
 import NoSSR from "@/components/NoSSR"
 
@@ -55,18 +56,25 @@ export default function GamesList() {
     )
 
     const WebGameCard = ({ game }: { game: Game }) => (
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="relative h-48 w-full">
-                <Image src={game.image || "/placeholder.svg"} alt={game.title} layout="fill" objectFit="fit" />
+        <Link href={`/games/${game.id}`} className="surface surface-hover group flex flex-col overflow-hidden">
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-zinc-100">
+                <Image
+                    src={game.image || "/placeholder.svg"}
+                    alt={game.title}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover transition duration-300 group-hover:scale-[1.03]"
+                />
             </div>
-            <div className="p-4">
-                <h3 className="text-2xl font-bold text-red-600">{game.title}</h3>
-                <p className="mt-2 text-gray-700 mb-4">{game.description}</p>
-                <Link href={`/games/${game.id}`} passHref>
-                    Play Now
-                </Link>
+            <div className="flex flex-1 flex-col p-6">
+                <h3 className="text-lg font-semibold text-zinc-900">{game.title}</h3>
+                <p className="mt-2 flex-1 text-sm text-zinc-600">{game.description}</p>
+                <span className="btn-primary mt-5 w-full">
+                    <IonIcon icon={playOutline} className="h-4 w-4" />
+                    Play now
+                </span>
             </div>
-        </div>
+        </Link>
     )
 
     return (
@@ -82,7 +90,7 @@ export default function GamesList() {
                     </IonRow>
                 </IonGrid>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {games.map((game) => (
                         <WebGameCard key={game.id} game={game} />
                     ))}

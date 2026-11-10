@@ -1,243 +1,79 @@
-"use client";
+"use client"
 
+import Image from "next/image"
 import Link from "next/link"
-import { isNativeApp } from "@/lib/utils"
-import NoSSR from "@/components/NoSSR"
-import { submitCandidacy } from "@/app/actions/election"
-import { useState } from "react"
-
-const resizeImage = (file: File): Promise<string> => {
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-                
-                // Maximum dimensions
-                const MAX_WIDTH = 800;
-                const MAX_HEIGHT = 800;
-
-                if (width > height) {
-                    if (width > MAX_WIDTH) {
-                        height *= MAX_WIDTH / width;
-                        width = MAX_WIDTH;
-                    }
-                } else {
-                    if (height > MAX_HEIGHT) {
-                        width *= MAX_HEIGHT / height;
-                        height = MAX_HEIGHT;
-                    }
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-
-                const ctx = canvas.getContext('2d');
-                ctx?.drawImage(img, 0, 0, width, height);
-
-                // Reduce quality to minimize file size
-                const resizedImage = canvas.toDataURL('image/jpeg', 0.7);
-                console.log('Original size:', file.size / 1024 / 1024, 'MB');
-                console.log('Resized size:', resizedImage.length / 1024 / 1024, 'MB');
-                console.log('Image starts with:', resizedImage.substring(0, 50));
-                resolve(resizedImage);
-            };
-            img.src = e.target?.result as string;
-        };
-        reader.readAsDataURL(file);
-    });
-};
+import { IonIcon } from "@ionic/react"
+import { arrowForwardOutline, logoDiscord } from "ionicons/icons"
+import { site } from "@/lib/site"
 
 export default function Hero() {
-    const HeroContent = () => {
-        const [formStatus, setFormStatus] = useState<{ success?: boolean; error?: string }>({});
-        const [imagePreview, setImagePreview] = useState<string | null>(null);
-        const positions = ['President', 'Vice President', 'Treasurer', 'Secretary', 'Communications Director'];
+    return (
+        <section className="relative isolate overflow-hidden bg-zinc-950 text-white">
+            <div className="absolute inset-0 -z-10 bg-grid bg-grid [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]" />
+            <div className="absolute -right-40 top-10 -z-10 h-[32rem] w-[32rem] rounded-full bg-brand-600/30 blur-[120px]" />
+            <div className="absolute -left-40 bottom-0 -z-10 h-72 w-72 rounded-full bg-brand-800/30 blur-[100px]" />
 
-        const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-            const file = e.target.files?.[0];
-            if (file) {
-                if (file.size > 10000000) { // 10MB limit for original file
-                    setFormStatus({ error: 'Image must be less than 10MB' });
-                    return;
-                }
-                try {
-                    console.log('Processing image:', file.name);
-                    const resizedImageData = await resizeImage(file);
-                    setImagePreview(resizedImageData);
-                    setFormStatus({});
-                } catch (error) {
-                    console.error('Error processing image:', error);
-                    setFormStatus({ error: 'Error processing image. Please try another image.' });
-                }
-            }
-        };
+            <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-5 pb-20 pt-16 sm:pt-20 lg:grid-cols-[1.15fr_1fr] lg:pb-28 lg:pt-24">
+                <div>
+                    <p className="eyebrow text-brand-400">Minot State University · Computer Science Club</p>
+                    <h1 className="mt-5 text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
+                        Learn by building.
+                        <span className="block text-zinc-400">Build with friends.</span>
+                    </h1>
+                    <p className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-300">
+                        Weekly meetings, hands-on projects, research and competitions for students at every skill level. No
+                        experience required, just curiosity.
+                    </p>
 
-        const handleSubmit = async (e: React.FormEvent) => {
-            e.preventDefault();
-            const form = e.target as HTMLFormElement;
-            
-            if (!imagePreview) {
-                setFormStatus({ error: 'Please select a profile image' });
-                return;
-            }
-
-            try {
-                const formData = {
-                    name: (form.elements.namedItem('name') as HTMLInputElement).value,
-                    email: (form.elements.namedItem('email') as HTMLInputElement).value,
-                    positions: positions.filter(pos => 
-                        (form.elements.namedItem(pos.toLowerCase().replace(/\s+/g, '-')) as HTMLInputElement).checked
-                    ),
-                    statement: (form.elements.namedItem('statement') as HTMLTextAreaElement).value,
-                    imageData: imagePreview
-                };
-
-                console.log('Submitting form with image size:', formData.imageData.length / 1024 / 1024, 'MB');
-                const result = await submitCandidacy(formData);
-                setFormStatus(result);
-
-                if (result.success) {
-                    form.reset();
-                    setImagePreview(null);
-                }
-            } catch (error) {
-                console.error('Error submitting form:', error);
-                setFormStatus({ error: 'Failed to submit form. Please try again.' });
-            }
-        };
-
-        return (
-            <div className="bg-gradient-to-r from-red-600 to-red-800 text-white py-16 px-4 sm:px-6 lg:px-8 h-full">
-                <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
-                    <div className="lg:w-1/2 bg-white rounded-lg shadow-lg p-6">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-4">CS Club Elections</h2>
-                        <p className="text-gray-600 mb-4">Voting for President will be held on Wedneday, April 16, 2025. The rest of the elections will be held on the following Wednesday. Interested in running for president? Fill out the form below!</p>
-                        
-                        {formStatus.success && (
-                            <div className="mb-4 p-4 bg-green-100 text-green-700 rounded-md">
-                                Your candidacy has been submitted successfully!
-                            </div>
-                        )}
-                        {formStatus.error && (
-                            <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
-                                {formStatus.error}
-                            </div>
-                        )}
-                        
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    required
-                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:ring-red-500 bg-white text-gray-900"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    required
-                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:ring-red-500 bg-white text-gray-900"
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">Profile Image</label>
-                                <input
-                                    type="file"
-                                    id="image"
-                                    name="image"
-                                    accept="image/*"
-                                    required
-                                    onChange={handleImageChange}
-                                    className="mt-1 block w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
-                                />
-                                {imagePreview && (
-                                    <div className="mt-2">
-                                        <img 
-                                            src={imagePreview} 
-                                            alt="Preview" 
-                                            className="w-32 h-32 object-cover rounded-full border-2 border-red-500"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Positions of Interest</label>
-                                <div className="space-y-2">
-                                    {positions.map((position) => (
-                                        <div key={position} className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                id={position.toLowerCase().replace(/\s+/g, '-')}
-                                                name={position.toLowerCase().replace(/\s+/g, '-')}
-                                                className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
-                                            />
-                                            <label htmlFor={position.toLowerCase().replace(/\s+/g, '-')} className="ml-2 text-sm text-gray-700">
-                                                {position}
-                                            </label>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div>
-                                <label htmlFor="statement" className="block text-sm font-medium text-gray-700 mb-1">Candidate Statement</label>
-                                <textarea
-                                    id="statement"
-                                    name="statement"
-                                    rows={4}
-                                    required
-                                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-red-500 focus:ring-red-500 bg-white text-gray-900"
-                                    placeholder="Tell us why you want to run for office and what you hope to accomplish..."
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="w-full bg-red-600 text-white py-3 px-4 rounded-md hover:bg-red-700 transition duration-200 text-lg font-medium"
-                            >
-                                Submit Candidacy
-                            </button>
-                        </form>
+                    <div className="mt-8 flex flex-wrap gap-3">
+                        <a href={site.links.discord} target="_blank" rel="noopener noreferrer" className="btn-primary px-6 py-3 text-base">
+                            <IonIcon icon={logoDiscord} className="h-5 w-5" />
+                            Join our Discord
+                        </a>
+                        <Link href="#projects" className="btn-ghost-dark px-6 py-3 text-base">
+                            See what we do
+                            <IonIcon icon={arrowForwardOutline} className="h-4 w-4" />
+                        </Link>
                     </div>
 
-                    <div className="lg:w-1/2">
-                        <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-white">CS Club Meeting!</h1>
-                        <p className="mt-6 text-xl sm:text-2xl max-w-3xl text-white">
-                            Join us on Wednesdays at 3:00 in Model 113. We're looking for people to help with:
-                        </p>
-
-                        <ul className="mt-4 text-lg sm:text-xl list-disc list-inside space-y-2 text-white">
-                            <li>AI / Data Science research</li>
-                            <li>Web application development</li>
-                            <li>Robotics</li>
-                            <li><Link href="/news" className="underline">Midwestern Instruction and Computing Symposium</Link></li>
-                            <li>Getting more involved in the CS Club</li>
-                        </ul>
-
-                        {/*<p className="mt-6 text-2xl font-semibold">Free Pizza for all attendees!</p>*/}
+                    <div className="mt-10 max-w-md overflow-hidden rounded-xl border border-white/10 bg-white/[0.03] font-mono text-sm shadow-2xl">
+                        <div className="flex items-center gap-1.5 border-b border-white/10 px-4 py-2.5">
+                            <span className="h-2.5 w-2.5 rounded-full bg-brand-500" />
+                            <span className="h-2.5 w-2.5 rounded-full bg-zinc-600" />
+                            <span className="h-2.5 w-2.5 rounded-full bg-zinc-600" />
+                            <span className="ml-2 text-xs text-zinc-500">next-meeting.sh</span>
+                        </div>
+                        <div className="space-y-1 px-4 py-4 text-zinc-300">
+                            <p>
+                                <span className="text-brand-400">$</span> csclub --next-meeting
+                            </p>
+                            <p>
+                                <span className="text-zinc-500">when </span>
+                                {site.meeting.day} @ {site.meeting.time}
+                            </p>
+                            <p>
+                                <span className="text-zinc-500">where</span> {site.meeting.place}
+                            </p>
+                            <p>
+                                <span className="text-zinc-500">who  </span> everyone&apos;s welcome
+                                <span className="ml-1 inline-block h-4 w-2 translate-y-0.5 animate-pulse bg-brand-500" />
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        )
-    }
 
-    return (
-        <NoSSR>
-            {isNativeApp() ? (
-                <HeroContent />
-            ) : (
-                <section className="relative overflow-hidden">
-                    <HeroContent />
-                </section>
-            )}
-        </NoSSR>
+                <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-sm lg:max-w-none">
+                    <div className="absolute inset-8 -z-10 rounded-full bg-brand-600/30 blur-3xl" />
+                    <Image
+                        src="/brand/mascot.png"
+                        alt="The CS Club beaver mascot typing on a keyboard"
+                        width={900}
+                        height={804}
+                        priority
+                        className="h-auto w-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.6)]"
+                    />
+                </div>
+            </div>
+        </section>
     )
 }

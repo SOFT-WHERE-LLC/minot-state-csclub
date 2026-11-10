@@ -14,8 +14,11 @@ import {
     IonCardHeader,
     IonCardTitle,
     IonCardContent,
+    IonIcon,
 } from "@ionic/react"
+import { arrowForwardOutline, openOutline } from "ionicons/icons"
 import { isNativeApp } from "@/lib/utils"
+import PageHeader from "@/components/PageHeader"
 import NoSSR from "@/components/NoSSR"
 
 const tutorials = [
@@ -123,43 +126,81 @@ const tutorials = [
     },
 ];
 
+const slug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+
 export default function TutorialsList() {
     const WebTutorials = () => (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-4xl font-bold mb-8 text-red-600">Tutorials</h1>
-            {Object.entries(groupTutorialsByCategory()).map(([category, categoryTutorials]) => (
-                <div key={category} className="mb-8">
-                    <h2 className="text-2xl font-semibold mb-4 text-gray-800">{category}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {categoryTutorials.map((tutorial, index) => (
-                            <div
-                                key={index}
-                                className="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105"
-                            >
-                                {tutorial.path.startsWith("http") ? (
-                                    <a href={tutorial.path} target="_blank" rel="noopener noreferrer" className="block h-full">
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-semibold text-red-600 mb-2">{tutorial.title}</h3>
-                                            <p className="text-gray-600">{tutorial.description}</p>
+        <main className="flex-1">
+            <PageHeader
+                eyebrow="Learn"
+                title="Tutorials"
+                description="Hand-picked guides for the things we build in the club, from your first web app to robots and 3D printing."
+            >
+                <div className="flex flex-wrap gap-2">
+                    {Object.keys(groupTutorialsByCategory()).map((category) => (
+                        <a
+                            key={category}
+                            href={`#${slug(category)}`}
+                            className="rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-sm text-zinc-200 transition hover:border-brand-400 hover:text-white"
+                        >
+                            {category}
+                        </a>
+                    ))}
+                </div>
+            </PageHeader>
+            <div className="page-shell space-y-16">
+                {Object.entries(groupTutorialsByCategory()).map(([category, categoryTutorials]) => (
+                    <section key={category} id={slug(category)} className="scroll-mt-24">
+                        <div className="flex items-baseline justify-between gap-4 border-b border-zinc-200 pb-3">
+                            <h2 className="text-xl font-semibold text-zinc-900">{category}</h2>
+                            <span className="font-mono text-xs text-zinc-500">
+                                {categoryTutorials.length} {categoryTutorials.length === 1 ? "guide" : "guides"}
+                            </span>
+                        </div>
+                        <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+                            {categoryTutorials.map((tutorial) => {
+                                const external = tutorial.path.startsWith("http")
+                                const card = (
+                                    <>
+                                        <div className="flex items-start justify-between gap-3">
+                                            <h3 className="font-semibold text-zinc-900 transition group-hover:text-brand-600">
+                                                {tutorial.title}
+                                            </h3>
+                                            <IonIcon
+                                                icon={external ? openOutline : arrowForwardOutline}
+                                                className="mt-0.5 h-4 w-4 shrink-0 text-zinc-400 transition group-hover:text-brand-600"
+                                            />
                                         </div>
+                                        <p className="mt-2 text-sm leading-relaxed text-zinc-600">{tutorial.description}</p>
+                                        <p className="mt-4 font-mono text-xs text-zinc-400">
+                                            {external ? new URL(tutorial.path).hostname.replace(/^www\./, "") : "club guide"}
+                                        </p>
+                                    </>
+                                )
+                                return external ? (
+                                    <a
+                                        key={tutorial.title}
+                                        href={tutorial.path}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="surface surface-hover group block p-6"
+                                    >
+                                        {card}
                                     </a>
                                 ) : (
-                                    <Link href={tutorial.path} className="block h-full">
-                                        <div className="p-6">
-                                            <h3 className="text-xl font-semibold text-red-600 mb-2">{tutorial.title}</h3>
-                                            <p className="text-gray-600">{tutorial.description}</p>
-                                        </div>
+                                    <Link key={tutorial.title} href={tutorial.path} className="surface surface-hover group block p-6">
+                                        {card}
                                     </Link>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ))}
-        </div>
+                                )
+                            })}
+                        </div>
+                    </section>
+                ))}
+            </div>
+        </main>
     )
 
-    const NativeTutorials = () => (
+const NativeTutorials = () => (
         <IonPage>
             <IonHeader>
                 <IonToolbar>

@@ -37,48 +37,60 @@ export default function Login() {
     }
 
     const WebLogin = () => (
-        <div className="max-w-md mx-auto p-8 bg-white shadow-lg rounded-lg mt-10">
-            <h2 className="text-4xl font-bold text-center text-red-600">Login</h2>
-            <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Username</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                        placeholder="Enter your username"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Password</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-600"
-                        placeholder="Enter your password"
-                        required
-                    />
-                </div>
-                {error && <p className="text-red-500 text-center">{error}</p>}
-                <button type="submit" className="w-full p-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                    Log In
-                </button>
-                <div className="text-center mt-4">
-                    <p>
-                        Don't have an account?{" "}
-                        <Link href="/register" className="text-blue-600 hover:underline">
+        <main className="relative isolate flex flex-1 items-center justify-center overflow-hidden bg-zinc-950 px-5 py-16">
+            <div className="absolute inset-0 -z-10 bg-grid bg-grid [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" />
+            <div className="absolute left-1/2 top-1/3 -z-10 h-80 w-80 -translate-x-1/2 rounded-full bg-brand-600/25 blur-3xl" />
+            <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl ring-1 ring-black/5 sm:p-10">
+                <p className="eyebrow">Members</p>
+                <h1 className="mt-2 text-3xl font-semibold text-zinc-900">Sign in</h1>
+                <p className="mt-2 text-sm text-zinc-600">Welcome back. Sign in with your club account.</p>
+                <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+                    <div>
+                        <label htmlFor="username" className="field-label">
+                            Username
+                        </label>
+                        <input
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="field"
+                            placeholder="Enter your username"
+                            autoComplete="username"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="password" className="field-label">
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="field"
+                            placeholder="Enter your password"
+                            autoComplete="current-password"
+                            required
+                        />
+                    </div>
+                    {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 ring-1 ring-inset ring-red-200">{error}</p>}
+                    <button type="submit" className="btn-primary w-full py-3">
+                        Sign in
+                    </button>
+                    <p className="text-center text-sm text-zinc-600">
+                        Don&apos;t have an account?{" "}
+                        <Link href="/register" className="link">
                             Register here
                         </Link>
                     </p>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        </main>
     )
 
-    const NativeLogin = () => (
+const NativeLogin = () => (
         <IonPage>
             <IonContent className="ion-padding">
                 <h2 className="text-4xl font-bold text-center text-red-600 mb-6">Login</h2>
@@ -125,5 +137,5 @@ export default function Login() {
         </IonPage>
     )
 
-    return <NoSSR>{isNativeApp() ? <NativeLogin /> : <WebLogin />}</NoSSR>
+    return <NoSSR>{isNativeApp() ? NativeLogin() : WebLogin()}</NoSSR>
 }

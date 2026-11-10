@@ -13,7 +13,8 @@ import {
     IonCardTitle,
     IonIcon,
 } from "@ionic/react"
-import { calendarOutline, hourglassOutline } from "ionicons/icons"
+import { arrowForwardOutline, calendarOutline, hourglassOutline } from "ionicons/icons"
+import PageHeader from "@/components/PageHeader"
 import { isNativeApp } from "@/lib/utils"
 import NoSSR from "@/components/NoSSR"
 import { opportunitySections, type OpportunitySection, type Opportunity } from "@/data/opportunities"
@@ -91,7 +92,57 @@ export default function OpportunitiesPage() {
                     <IonContent className="ion-padding">{content}</IonContent>
                 </IonPage>
             ) : (
-                <main className="min-h-screen bg-gray-50">{content}</main>
+                <main className="flex-1">
+                    <PageHeader
+                        eyebrow="Grow"
+                        title="Opportunities"
+                        description="Research programs, competitions and other ways to grow in computer science beyond the classroom."
+                    />
+                    <div className="page-shell space-y-14">
+                        {opportunitySections.map((section: OpportunitySection) => (
+                            <section key={section.id}>
+                                <h2 className="section-title">{section.title}</h2>
+                                <p className="mt-2 max-w-2xl text-zinc-600">{section.description}</p>
+                                <div className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                                    {section.opportunities.map((opportunity: Opportunity) => (
+                                        <Link
+                                            key={opportunity.id}
+                                            href={opportunity.path}
+                                            className="surface surface-hover group flex flex-col p-6"
+                                        >
+                                            <h3 className="text-lg font-semibold text-zinc-900 transition group-hover:text-brand-600">
+                                                {opportunity.title}
+                                            </h3>
+                                            <p className="mt-2 flex-1 text-sm leading-relaxed text-zinc-600">{opportunity.description}</p>
+                                            {(opportunity.date || opportunity.deadline) && (
+                                                <dl className="mt-5 space-y-2 border-t border-zinc-100 pt-4 text-sm">
+                                                    {opportunity.date && (
+                                                        <div className="flex items-center gap-2 text-zinc-600">
+                                                            <IonIcon icon={calendarOutline} className="h-4 w-4 text-zinc-400" />
+                                                            <dt className="sr-only">Dates</dt>
+                                                            <dd>{opportunity.date}</dd>
+                                                        </div>
+                                                    )}
+                                                    {opportunity.deadline && (
+                                                        <div className="flex items-center gap-2 text-zinc-600">
+                                                            <IonIcon icon={hourglassOutline} className="h-4 w-4 text-zinc-400" />
+                                                            <dt>Deadline:</dt>
+                                                            <dd>{opportunity.deadline}</dd>
+                                                        </div>
+                                                    )}
+                                                </dl>
+                                            )}
+                                            <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
+                                                Learn more
+                                                <IonIcon icon={arrowForwardOutline} className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </section>
+                        ))}
+                    </div>
+                </main>
             )}
         </NoSSR>
     )

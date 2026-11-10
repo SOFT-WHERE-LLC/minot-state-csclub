@@ -48,8 +48,37 @@ const TicTacToe = () => {
         setXIsNext(true)
     }
 
+    if (!isNativeApp()) {
+        return (
+            <div className="mx-auto max-w-sm px-4 py-10">
+                <p className="text-center font-mono text-sm text-zinc-600">{status}</p>
+                <div className="mt-6 grid grid-cols-3 gap-3">
+                    {squares.map((value, i) => (
+                        <button
+                            key={i}
+                            onClick={() => handleClick(i)}
+                            className={`flex aspect-square items-center justify-center rounded-xl text-4xl font-bold transition ${
+                                value === "X"
+                                    ? "bg-brand-600 text-white"
+                                    : value === "O"
+                                      ? "bg-zinc-900 text-white"
+                                      : "bg-zinc-100 text-zinc-900 ring-1 ring-inset ring-zinc-200 hover:bg-zinc-200"
+                            }`}
+                            aria-label={`Square ${i + 1}${value ? `, ${value}` : ""}`}
+                        >
+                            {value}
+                        </button>
+                    ))}
+                </div>
+                <button onClick={resetGame} className="btn-secondary mt-6 w-full">
+                    Reset game
+                </button>
+            </div>
+        )
+    }
+
     return (
-        <div className={`p-4 ${isNativeApp() ? "" : "bg-white rounded-lg shadow-md"}`}>
+        <div className="p-4">
             <div className="mb-4 text-xl font-bold text-center">{status}</div>
             <IonGrid>
                 <IonRow>
